@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/LearningApplet.iml" filepath="$PROJECT_DIR$/LearningApplet.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Time-Tracking.iml" filepath="$PROJECT_DIR$/Time-Tracking.iml" />
     </modules>
   </component>
 </project>
