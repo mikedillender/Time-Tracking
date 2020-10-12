@@ -20,7 +20,7 @@ public class Task {
         task=ts.get(5);
         start=time2hours(ts.get(8));
         dur=time2hours(ts.get(11));
-        System.out.println("Duration = "+ts.get(11)+" = "+dur);
+        //System.out.println("Duration = "+ts.get(11)+" = "+dur);
     }
     public String toString(){
         return task+" ( "+proj+" ) Start : "+start+" | Lasted : "+dur;

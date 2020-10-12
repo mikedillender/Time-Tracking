@@ -11,7 +11,7 @@ import java.util.ArrayList;
 public class Main extends Applet implements Runnable, KeyListener {
 
     //BASIC VARIABLES
-    private final int WIDTH=2400, HEIGHT=900;
+    private final int WIDTH=1500, HEIGHT=900;
 
     //GRAPHICS OBJECTS
     private Thread thread;
@@ -34,11 +34,16 @@ public class Main extends Applet implements Runnable, KeyListener {
             new Color(0,0,0),
     };
 
+    Color[] projcols;
+    String[] prs;
+
+
     public void init(){//STARTS THE PROGRAM
         this.resize(WIDTH, HEIGHT);
         this.addKeyListener(this);
         img=createImage(WIDTH,HEIGHT);
         gfx=img.getGraphics();
+        gfx.setFont(gfx.getFont().deriveFont(20f));
         days=new ArrayList<>();
         cols=new ArrayList<>();
         importData();
@@ -53,8 +58,8 @@ public class Main extends Applet implements Runnable, KeyListener {
 
         //RENDER FOREGROUND
         int x=50;
-        int w=3;
-        int sep=0;
+        int w=15;
+        int sep=4;
         for (int y=0;y<24;y++){
             int y1=(HEIGHT/24)*y;
             gfx.setColor(Color.GRAY);
@@ -73,16 +78,22 @@ public class Main extends Applet implements Runnable, KeyListener {
             }
         }
         x=x1;
-        int i=0;
+        int d1=0;
         for (Day d:days){
-            gfx.setColor(dayc[i%7]);
+            //gfx.setColor(dayc[d1%7]);
             x=x+w+sep;
             for (Task t:d.tasks){
                 int y=(int)((HEIGHT/24f)*t.start);
                 int h=(int)((HEIGHT/24f)*t.dur);
+                gfx.setColor(getColor(t.proj));
                 gfx.fillRect(x,y,w,h);
             }
-            i++;
+            d1++;
+        }
+        int y=50;
+        for (int i=0;i<projcols.length;i++){
+            gfx.setColor(projcols[i]);
+            gfx.drawString(prs[i],WIDTH-400,y+(30*i));
         }
 
         //FINAL
@@ -91,7 +102,7 @@ public class Main extends Applet implements Runnable, KeyListener {
 
     public void importData(){
         ArrayList<ArrayList<String>> records = new ArrayList<>();
-        try (BufferedReader br = new BufferedReader(new FileReader("C:\\Users\\Mike\\Documents\\GitHub\\Time-Tracking\\src\\alltime.csv"))) {
+        try (BufferedReader br = new BufferedReader(new FileReader("C:\\Users\\Mike\\Documents\\GitHub\\Time-Tracking\\src\\toggl.csv"))) {
             String line;
             while ((line = br.readLine()) != null) {
                 String[] values = line.split(",");
@@ -128,6 +139,36 @@ public class Main extends Applet implements Runnable, KeyListener {
                 cds=t.get(7);
             }
         }
+        ArrayList<String> projs=new ArrayList<>();
+        boolean first=true;
+        for (ArrayList<String> t:records){
+            if (first){first=false;continue;}
+            String proj=t.get(3);
+            boolean repeat=false;
+            for (String s:projs){
+                if (s.equals(proj)){
+                    repeat=true;
+                }
+            }
+            if (!repeat){
+                projs.add(proj);
+            }
+        }
+        projcols=new Color[projs.size()];
+        prs=new String[projs.size()];
+        for (int p=0; p<projcols.length; p++){
+            prs[p]=projs.get(p);
+            int r=(projs.size()+p)*1713;
+            int g=(projs.size()-p)*1012;
+            int b=(projs.size()+2*p)*5632;
+            projcols[p]=new Color(r%205,g%205,b%205);
+        }
+    }
+
+    public Color getColor(String p){
+        int i=0;
+        for (String s: prs){ if (p.equals(s)){break;}i++; }
+        return projcols[i];
     }
 
     public void update(Graphics g){ //REDRAWS FRAME
@@ -151,10 +192,9 @@ public class Main extends Applet implements Runnable, KeyListener {
     public void keyTyped(KeyEvent e) { }
 
     public void exportImg(){
-        //String export="B:\\Libraries\\Programming\\Calender\\Calendar-Generator\\calendarImgs\\t.png";
         //String export="C:\\Users\\Mike\\Documents\\GitHub\\Time-Tracking\\src\\t.png";
-        String export="C:\\Users\\Mike\\Documents\\GitHub\\Time-Tracking\\src\\tall.png";
-        //String export="C:\\Users\\dillemic000\\Documents\\GitHub\\Calendar-Generator\\t.png";
+        //String export="C:\\Users\\Mike\\Documents\\GitHub\\Time-Tracking\\src\\tall.png";
+        String export="C:\\Users\\Mike\\Documents\\GitHub\\Time-Tracking\\src\\t2.png";
 
         RenderedImage rendImage = toBufferedImage(img);
         File file = new File(export);
