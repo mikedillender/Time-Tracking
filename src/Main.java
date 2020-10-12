@@ -158,10 +158,13 @@ public class Main extends Applet implements Runnable, KeyListener {
         prs=new String[projs.size()];
         for (int p=0; p<projcols.length; p++){
             prs[p]=projs.get(p);
-            int r=(projs.size()+p)*1713;
-            int g=(projs.size()-p)*1012;
-            int b=(projs.size()+2*p)*5632;
-            projcols[p]=new Color(r%205,g%205,b%205);
+            float h=(float) (p*(360f/(projcols.length-1)));
+            float s=(float)(65+35*((Math.random()<.5)?-1:1)*Math.pow(Math.random(),1.5));;
+            float l=(float)(40+35*((Math.random()<.5)?-1:1)*Math.pow(Math.random(),1.5));
+            System.out.println(h+", "+s+","+l);
+            HSLColor col=new HSLColor(h,s,l,1);
+            //HSLColor col=new HSLColor(h,100,50,1);
+            projcols[p]=col.getRGB();
         }
     }
 
