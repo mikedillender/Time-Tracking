@@ -12,6 +12,10 @@ public class Day {
     public void addTask(ArrayList<String> t){
         tasksl.add(t);
         tasks.add(new Task(t));
+        if (tasks.get(tasks.size()-1).dur==-1||tasks.get(tasks.size()-1).start==-1){
+            tasks.remove(tasks.size()-1);
+            tasksl.remove(tasksl.size()-1);
+        }
     }
     private float time2hours(String time){
         int hrs=Integer.parseInt(time.substring(0,2));

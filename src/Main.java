@@ -11,7 +11,7 @@ import java.util.ArrayList;
 public class Main extends Applet implements Runnable, KeyListener {
 
     //BASIC VARIABLES
-    private final int WIDTH=2000, HEIGHT=900;
+    private final int WIDTH=2400, HEIGHT=900;
 
     //GRAPHICS OBJECTS
     private Thread thread;
@@ -53,7 +53,7 @@ public class Main extends Applet implements Runnable, KeyListener {
 
         //RENDER FOREGROUND
         int x=50;
-        int w=7;
+        int w=3;
         int sep=0;
         for (int y=0;y<24;y++){
             int y1=(HEIGHT/24)*y;
@@ -65,7 +65,7 @@ public class Main extends Applet implements Runnable, KeyListener {
         int x1=x;
         for (int i=0;i<days.size();i++){
             x=x+w+sep;
-            if (i%7==0){
+            if (i%21==0){
                 gfx.setColor(Color.GRAY);
                 gfx.drawLine(x-(sep/2),0,x-(sep/2),HEIGHT);
                 gfx.setColor(Color.BLACK);
@@ -91,7 +91,7 @@ public class Main extends Applet implements Runnable, KeyListener {
 
     public void importData(){
         ArrayList<ArrayList<String>> records = new ArrayList<>();
-        try (BufferedReader br = new BufferedReader(new FileReader("C:\\Users\\Mike\\Documents\\GitHub\\Time-Tracking\\src\\togglyear.csv"))) {
+        try (BufferedReader br = new BufferedReader(new FileReader("C:\\Users\\Mike\\Documents\\GitHub\\Time-Tracking\\src\\alltime.csv"))) {
             String line;
             while ((line = br.readLine()) != null) {
                 String[] values = line.split(",");
@@ -118,7 +118,7 @@ public class Main extends Applet implements Runnable, KeyListener {
         int i=0;
         for (ArrayList<String> t:records){
             i++;
-            if (i==1){continue;}
+            if (i==1||t.size()<7){continue;}
             if (t.get(7).equals(cds)){
                 cd.addTask(t);
             }else {
@@ -153,7 +153,7 @@ public class Main extends Applet implements Runnable, KeyListener {
     public void exportImg(){
         //String export="B:\\Libraries\\Programming\\Calender\\Calendar-Generator\\calendarImgs\\t.png";
         //String export="C:\\Users\\Mike\\Documents\\GitHub\\Time-Tracking\\src\\t.png";
-        String export="C:\\Users\\Mike\\Documents\\GitHub\\Time-Tracking\\src\\t1.png";
+        String export="C:\\Users\\Mike\\Documents\\GitHub\\Time-Tracking\\src\\tall.png";
         //String export="C:\\Users\\dillemic000\\Documents\\GitHub\\Calendar-Generator\\t.png";
 
         RenderedImage rendImage = toBufferedImage(img);
