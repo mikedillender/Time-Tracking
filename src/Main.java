@@ -11,7 +11,7 @@ import java.util.ArrayList;
 public class Main extends Applet implements Runnable, KeyListener {
 
     //BASIC VARIABLES
-    private final int WIDTH=1280, HEIGHT=900;
+    private final int WIDTH=2000, HEIGHT=900;
 
     //GRAPHICS OBJECTS
     private Thread thread;
@@ -53,8 +53,8 @@ public class Main extends Applet implements Runnable, KeyListener {
 
         //RENDER FOREGROUND
         int x=50;
-        int w=15;
-        int sep=5;
+        int w=7;
+        int sep=0;
         for (int y=0;y<24;y++){
             int y1=(HEIGHT/24)*y;
             gfx.setColor(Color.GRAY);
@@ -91,7 +91,7 @@ public class Main extends Applet implements Runnable, KeyListener {
 
     public void importData(){
         ArrayList<ArrayList<String>> records = new ArrayList<>();
-        try (BufferedReader br = new BufferedReader(new FileReader("C:\\Users\\Mike\\Documents\\GitHub\\Time-Tracking\\src\\toggl.csv"))) {
+        try (BufferedReader br = new BufferedReader(new FileReader("C:\\Users\\Mike\\Documents\\GitHub\\Time-Tracking\\src\\togglyear.csv"))) {
             String line;
             while ((line = br.readLine()) != null) {
                 String[] values = line.split(",");
@@ -152,7 +152,8 @@ public class Main extends Applet implements Runnable, KeyListener {
 
     public void exportImg(){
         //String export="B:\\Libraries\\Programming\\Calender\\Calendar-Generator\\calendarImgs\\t.png";
-        String export="C:\\Users\\Mike\\Documents\\GitHub\\Time-Tracking\\src\\t.png";
+        //String export="C:\\Users\\Mike\\Documents\\GitHub\\Time-Tracking\\src\\t.png";
+        String export="C:\\Users\\Mike\\Documents\\GitHub\\Time-Tracking\\src\\t1.png";
         //String export="C:\\Users\\dillemic000\\Documents\\GitHub\\Calendar-Generator\\t.png";
 
         RenderedImage rendImage = toBufferedImage(img);
