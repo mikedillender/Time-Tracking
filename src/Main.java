@@ -131,7 +131,7 @@ public class Main extends Applet implements Runnable, KeyListener {
 
     public void importData(){
         ArrayList<ArrayList<String>> records = new ArrayList<>();
-        try (BufferedReader br = new BufferedReader(new FileReader("C:\\Users\\Mike\\Documents\\GitHub\\Time-Tracking\\src\\toggl.csv"))) {
+        try (BufferedReader br = new BufferedReader(new FileReader("C:\\Users\\Mike\\Documents\\GitHub\\Time-Tracking\\src\\toggl1.csv"))) {
             String line;
             while ((line = br.readLine()) != null) {
                 String[] values = line.split(",");
@@ -168,6 +168,7 @@ public class Main extends Applet implements Runnable, KeyListener {
                 cds=t.get(7);
             }
         }
+        days.add(cd);
         ArrayList<String> projs=new ArrayList<>();
         boolean first=true;
         for (ArrayList<String> t:records){
@@ -187,9 +188,24 @@ public class Main extends Applet implements Runnable, KeyListener {
         prs=new String[projs.size()];
         for (int p=0; p<projcols.length; p++){
             prs[p]=projs.get(p);
-            float h=(float) (p*(360f/(projcols.length-1)));
+            float h=(float) ((projcols.length-1-p)*(360f/(projcols.length-1)));
             float s=(float)(65+35*((Math.random()<.5)?-1:1)*Math.pow(Math.random(),1.5));;
-            float l=(float)(40+35*((Math.random()<.5)?-1:1)*Math.pow(Math.random(),1.5));
+            float l=(float)(45+25*((Math.random()<.5)?-1:1)*Math.pow(Math.random(),1.5));
+            System.out.println(h+", "+s+","+l);
+            HSLColor col=new HSLColor(h,s,l,1);
+            //HSLColor col=new HSLColor(h,100,50,1);
+            projcols[p]=col.getRGB();
+        }
+    }
+
+    public void resetcols(){
+        int[] relay=new int[projcols.length];
+        for (int i=0;i<relay.length;i++){relay[i]=i;}
+        relay[3]=8;relay[8]=3;
+        for (int p=0; p<projcols.length; p++){
+            float h=(float) ((relay[p])*(360f/(projcols.length-1)));
+            float s=(float)(70+30*((Math.random()<.5)?-1:1)*Math.pow(Math.random(),1.5));;
+            float l=(float)(50+25*((Math.random()<.5)?-1:1)*Math.pow(Math.random(),1.0));
             System.out.println(h+", "+s+","+l);
             HSLColor col=new HSLColor(h,s,l,1);
             //HSLColor col=new HSLColor(h,100,50,1);
@@ -219,14 +235,21 @@ public class Main extends Applet implements Runnable, KeyListener {
 
 
     //INPUT
-    public void keyPressed(KeyEvent e) { }
-    public void keyReleased(KeyEvent e) { exportImg(); }
+    public void keyPressed(KeyEvent e) {
+        if (e.getKeyCode()==KeyEvent.VK_P){
+            exportImg();
+        }
+        if (e.getKeyCode()==KeyEvent.VK_SPACE){
+            resetcols();
+        }
+    }
+    public void keyReleased(KeyEvent e) {  }
     public void keyTyped(KeyEvent e) { }
 
     public void exportImg(){
         //String export="C:\\Users\\Mike\\Documents\\GitHub\\Time-Tracking\\src\\t.png";
         //String export="C:\\Users\\Mike\\Documents\\GitHub\\Time-Tracking\\src\\tall.png";
-        String export="C:\\Users\\Mike\\Documents\\GitHub\\Time-Tracking\\src\\t2.png";
+        String export="C:\\Users\\Mike\\Documents\\GitHub\\Time-Tracking\\src\\t3.png";
 
         RenderedImage rendImage = toBufferedImage(img);
         File file = new File(export);
