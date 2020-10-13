@@ -1,3 +1,6 @@
+import com.sun.javafx.geom.Vec2f;
+import com.sun.javafx.geom.Vec3f;
+
 import java.util.ArrayList;
 
 public class Day {
@@ -28,7 +31,20 @@ public class Day {
         for (Task t: tasks){
             System.out.println(t.toString());
         }
-
     }
+
+    public Vec2f getDayTime(){
+        Vec2f times=new Vec2f();
+        for (Task t: tasks){
+            if (t.start>4){
+                times.y+=t.dur;
+                if (times.x==0){
+                    times.x=t.start;
+                }
+            }
+        }
+        return times;
+    }
+
 
 }

@@ -1,3 +1,5 @@
+import com.sun.javafx.geom.Vec2f;
+
 import javax.imageio.ImageIO;
 import java.applet.Applet;
 import java.awt.*;
@@ -43,7 +45,6 @@ public class Main extends Applet implements Runnable, KeyListener {
         this.addKeyListener(this);
         img=createImage(WIDTH,HEIGHT);
         gfx=img.getGraphics();
-        gfx.setFont(gfx.getFont().deriveFont(20f));
         days=new ArrayList<>();
         cols=new ArrayList<>();
         importData();
@@ -57,20 +58,23 @@ public class Main extends Applet implements Runnable, KeyListener {
         gfx.fillRect(0,0,WIDTH,HEIGHT);//background size
 
         //RENDER FOREGROUND
+        gfx.setFont(gfx.getFont().deriveFont(20f));
+
         int x=50;
-        int w=15;
+        int w=10;
         int sep=4;
+        int endx=x+((w+sep)*(days.size()+1));
         for (int y=0;y<24;y++){
             int y1=(HEIGHT/24)*y;
             gfx.setColor(Color.GRAY);
-            gfx.drawLine(0,y1,WIDTH,y1);
+            gfx.drawLine(0,y1,endx,y1);
             gfx.setColor(Color.BLACK);
             gfx.drawString(y+"",10,y1);
         }
         int x1=x;
         for (int i=0;i<days.size();i++){
             x=x+w+sep;
-            if (i%21==0){
+            if (i%7==0){
                 gfx.setColor(Color.GRAY);
                 gfx.drawLine(x-(sep/2),0,x-(sep/2),HEIGHT);
                 gfx.setColor(Color.BLACK);
@@ -95,9 +99,34 @@ public class Main extends Applet implements Runnable, KeyListener {
             gfx.setColor(projcols[i]);
             gfx.drawString(prs[i],WIDTH-400,y+(30*i));
         }
+        drawTimePlot(gfx,1000,400);
 
         //FINAL
         g.drawImage(img,0,0,this);
+    }
+
+    public void drawTimePlot(Graphics g,int x, int y){
+        int wid=400;
+        int hei=400;
+        ArrayList<Vec2f> points=new ArrayList<>();
+        for (Day d:days){
+            points.add(d.getDayTime());
+        }
+        gfx.setColor(Color.gray);
+        for (int i=0; i<12; i++){
+            gfx.drawLine(x,y+(i*hei/12),x+wid,y+(i*hei/12));
+            gfx.drawLine(x+(i*wid/12),y,x+(i*wid/12),y+hei);
+        }
+        gfx.setColor(Color.BLACK);
+        g.drawRect(x,y,wid,hei);
+        gfx.setFont(gfx.getFont().deriveFont(16f));
+
+        g.drawString("Time Started Working - >",x+wid/5,y+hei+30);
+        g.drawString("Work Done - ^",x-100,y+hei/2);
+        gfx.setColor(Color.blue);
+        for (Vec2f v: points){
+            g.fillOval(x+(int)(v.x*wid/24f)-4,y+hei-(int)(v.y*hei/12f)-4,8,8);
+        }
     }
 
     public void importData(){
