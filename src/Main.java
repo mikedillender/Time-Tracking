@@ -131,7 +131,7 @@ public class Main extends Applet implements Runnable, KeyListener {
 
     public void importData(){
         ArrayList<ArrayList<String>> records = new ArrayList<>();
-        try (BufferedReader br = new BufferedReader(new FileReader("C:\\Users\\Mike\\Documents\\GitHub\\Time-Tracking\\src\\toggl4.csv"))) {
+        try (BufferedReader br = new BufferedReader(new FileReader("C:\\Users\\Mike\\Documents\\GitHub\\Time-Tracking\\src\\toggl9.csv"))) {
             String line;
             while ((line = br.readLine()) != null) {
                 String[] values = line.split(",");
@@ -249,7 +249,7 @@ public class Main extends Applet implements Runnable, KeyListener {
     public void exportImg(){
         //String export="C:\\Users\\Mike\\Documents\\GitHub\\Time-Tracking\\src\\t.png";
         //String export="C:\\Users\\Mike\\Documents\\GitHub\\Time-Tracking\\src\\tall.png";
-        String export="C:\\Users\\Mike\\Documents\\GitHub\\Time-Tracking\\src\\t4.png";
+        String export="C:\\Users\\Mike\\Documents\\GitHub\\Time-Tracking\\src\\t6.png";
 
         RenderedImage rendImage = toBufferedImage(img);
         File file = new File(export);
