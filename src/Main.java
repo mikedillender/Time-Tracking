@@ -38,6 +38,7 @@ public class Main extends Applet implements Runnable, KeyListener {
 
     Color[] projcols;
     String[] prs;
+    float[] times;
 
 
     public void init(){//STARTS THE PROGRAM
@@ -59,6 +60,7 @@ public class Main extends Applet implements Runnable, KeyListener {
 
         //RENDER FOREGROUND
         gfx.setFont(gfx.getFont().deriveFont(20f));
+        boolean stack=true;
 
         int x=50;
         int w=10;
@@ -69,9 +71,15 @@ public class Main extends Applet implements Runnable, KeyListener {
             gfx.setColor(Color.GRAY);
             gfx.drawLine(0,y1,endx,y1);
             gfx.setColor(Color.BLACK);
-            gfx.drawString(y+"",10,y1);
+            if(!stack) {
+                gfx.drawString(y % 12 + "", 10, y1 - 30);
+            }else {
+                if (y%2==1){continue;}
+                gfx.drawString(12-y/2 + "", 10, y1 - 30);
+            }
         }
         int x1=x;
+        gfx.setFont(gfx.getFont().deriveFont(12f));
         for (int i=0;i<days.size();i++){
             x=x+w+sep;
             if (i%7==0){
@@ -82,23 +90,36 @@ public class Main extends Applet implements Runnable, KeyListener {
             }
         }
         x=x1;
-        int d1=0;
+        gfx.setFont(gfx.getFont().deriveFont(20f));
         for (Day d:days){
             //gfx.setColor(dayc[d1%7]);
             x=x+w+sep;
-            for (Task t:d.tasks){
-                int y=(int)((HEIGHT/24f)*t.start);
-                int h=(int)((HEIGHT/24f)*t.dur);
-                gfx.setColor(getColor(t.proj));
-                gfx.fillRect(x,y,w,h);
+            if (!stack) {
+                for (Task t : d.tasks) {
+                    int y = (int) ((HEIGHT / 24f) * t.start);
+                    int h = (int) ((HEIGHT / 24f) * t.dur);
+                    gfx.setColor(getColor(t.proj));
+                    gfx.fillRect(x, y, w, h);
+                }
+            }else {
+                int y1=(HEIGHT/24);
+                int i=0;
+                for (float t : d.projs){
+                    int h = (int) ((HEIGHT / 12f) * t);
+                    gfx.setColor(projcols[i]);
+                    gfx.fillRect(x, (HEIGHT/24)*24-y1-h, w, h);
+                    y1=y1+h;
+                    i++;
+                }
             }
-            d1++;
         }
         int y=50;
+        gfx.setFont(gfx.getFont().deriveFont(18f));
         for (int i=0;i<projcols.length;i++){
             gfx.setColor(projcols[i]);
-            gfx.drawString(prs[i],WIDTH-400,y+(30*i));
+            gfx.drawString(prs[i]+" : "+((int)(times[i]*10))/10.0+" Hrs",WIDTH-500,y+(30*i));
         }
+        gfx.setFont(gfx.getFont().deriveFont(20f));
         drawTimePlot(gfx,1000,400);
 
         //FINAL
@@ -131,7 +152,7 @@ public class Main extends Applet implements Runnable, KeyListener {
 
     public void importData(){
         ArrayList<ArrayList<String>> records = new ArrayList<>();
-        try (BufferedReader br = new BufferedReader(new FileReader("C:\\Users\\Mike\\Documents\\GitHub\\Time-Tracking\\src\\toggl9.csv"))) {
+        try (BufferedReader br = new BufferedReader(new FileReader("C:\\Users\\Mike\\Documents\\GitHub\\Time-Tracking\\src\\toggl7.csv"))) {
             String line;
             while ((line = br.readLine()) != null) {
                 String[] values = line.split(",");
@@ -196,6 +217,18 @@ public class Main extends Applet implements Runnable, KeyListener {
             //HSLColor col=new HSLColor(h,100,50,1);
             projcols[p]=col.getRGB();
         }
+        resetcols();
+        for (Day d: days) {
+            d.setProjs(prs);
+        }
+        times=new float[projs.size()];
+        for (Day d:days){
+            i=0;
+            for (float t : d.projs){
+                times[i]+=t;
+                i++;
+            }
+        }
     }
 
     public void resetcols(){
@@ -204,13 +237,15 @@ public class Main extends Applet implements Runnable, KeyListener {
         relay[3]=8;relay[8]=3;
         for (int p=0; p<projcols.length; p++){
             float h=(float) ((relay[p])*(360f/(projcols.length-1)));
-            float s=(float)(70+30*((Math.random()<.5)?-1:1)*Math.pow(Math.random(),1.5));;
-            float l=(float)(50+25*((Math.random()<.5)?-1:1)*Math.pow(Math.random(),1.0));
+            //float s=(float)(70+30*((Math.random()<.5)?-1:1)*Math.pow(Math.random(),1.5));;
+            float s=(float)(100-50*(Math.pow(Math.random(),2)));
+            float l=(float)(50+25*((Math.random()<.5)?-.4:1)*Math.pow(Math.random(),1.3));
             System.out.println(h+", "+s+","+l);
             HSLColor col=new HSLColor(h,s,l,1);
             //HSLColor col=new HSLColor(h,100,50,1);
             projcols[p]=col.getRGB();
         }
+        projcols[5]=new Color(26, 30, 48);
     }
 
     public Color getColor(String p){
@@ -249,7 +284,7 @@ public class Main extends Applet implements Runnable, KeyListener {
     public void exportImg(){
         //String export="C:\\Users\\Mike\\Documents\\GitHub\\Time-Tracking\\src\\t.png";
         //String export="C:\\Users\\Mike\\Documents\\GitHub\\Time-Tracking\\src\\tall.png";
-        String export="C:\\Users\\Mike\\Documents\\GitHub\\Time-Tracking\\src\\t6.png";
+        String export="C:\\Users\\Mike\\Documents\\GitHub\\Time-Tracking\\src\\t7.png";
 
         RenderedImage rendImage = toBufferedImage(img);
         File file = new File(export);

@@ -7,6 +7,7 @@ public class Day {
     public ArrayList<ArrayList<String>> tasksl;
     ArrayList<Task> tasks;
     int index;
+    float[] projs;
     public Day(int i){
         tasksl=new ArrayList<>();
         tasks=new ArrayList<>();
@@ -46,5 +47,15 @@ public class Day {
         return times;
     }
 
+    public void setProjs(String[] ps) {
+        projs=new float[ps.length];
+        for (Task t : tasks) {
+            for (int i=0; i<ps.length;i++){
+                if (t.proj.contains(ps[i])){
+                    projs[i]+=t.dur;
+                }
+            }
+        }
+    }
 
 }
