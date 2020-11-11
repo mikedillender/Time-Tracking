@@ -13,7 +13,7 @@ import java.util.ArrayList;
 public class Main extends Applet implements Runnable, KeyListener {
 
     //BASIC VARIABLES
-    private final int WIDTH=1500, HEIGHT=900;
+    private final int WIDTH=1700, HEIGHT=900;
 
     //GRAPHICS OBJECTS
     private Thread thread;
@@ -60,7 +60,7 @@ public class Main extends Applet implements Runnable, KeyListener {
 
         //RENDER FOREGROUND
         gfx.setFont(gfx.getFont().deriveFont(20f));
-        boolean stack=true;
+        boolean stack=false;
 
         int x=50;
         int w=10;
@@ -120,7 +120,7 @@ public class Main extends Applet implements Runnable, KeyListener {
             gfx.drawString(prs[i]+" : "+((int)(times[i]*10))/10.0+" Hrs",WIDTH-500,y+(30*i));
         }
         gfx.setFont(gfx.getFont().deriveFont(20f));
-        drawTimePlot(gfx,1000,400);
+        drawTimePlot(gfx,WIDTH-500,400);
 
         //FINAL
         g.drawImage(img,0,0,this);
@@ -134,9 +134,11 @@ public class Main extends Applet implements Runnable, KeyListener {
             points.add(d.getDayTime());
         }
         gfx.setColor(Color.gray);
+        gfx.setFont(gfx.getFont().deriveFont(14f));
         for (int i=0; i<12; i++){
             gfx.drawLine(x,y+(i*hei/12),x+wid,y+(i*hei/12));
             gfx.drawLine(x+(i*wid/12),y,x+(i*wid/12),y+hei);
+            gfx.drawString(""+(i*2),(x+(i*wid/12)),y+hei+15);
         }
         gfx.setColor(Color.BLACK);
         g.drawRect(x,y,wid,hei);
@@ -152,7 +154,7 @@ public class Main extends Applet implements Runnable, KeyListener {
 
     public void importData(){
         ArrayList<ArrayList<String>> records = new ArrayList<>();
-        try (BufferedReader br = new BufferedReader(new FileReader("C:\\Users\\Mike\\Documents\\GitHub\\Time-Tracking\\src\\toggl11.csv"))) {
+        try (BufferedReader br = new BufferedReader(new FileReader("C:\\Users\\Mike\\Documents\\GitHub\\Time-Tracking\\src\\toggl12.csv"))) {
             String line;
             while ((line = br.readLine()) != null) {
                 String[] values = line.split(",");
@@ -284,7 +286,7 @@ public class Main extends Applet implements Runnable, KeyListener {
     public void exportImg(){
         //String export="C:\\Users\\Mike\\Documents\\GitHub\\Time-Tracking\\src\\t.png";
         //String export="C:\\Users\\Mike\\Documents\\GitHub\\Time-Tracking\\src\\tall.png";
-        String export="C:\\Users\\Mike\\Documents\\GitHub\\Time-Tracking\\src\\t8.png";
+        String export="C:\\Users\\Mike\\Documents\\GitHub\\Time-Tracking\\src\\t10.png";
 
         RenderedImage rendImage = toBufferedImage(img);
         File file = new File(export);
