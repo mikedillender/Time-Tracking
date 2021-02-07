@@ -13,7 +13,7 @@ import java.util.ArrayList;
 public class Main extends Applet implements Runnable, KeyListener {
 
     //BASIC VARIABLES
-    private final int WIDTH=1700, HEIGHT=900;
+    private final int WIDTH=2000, HEIGHT=1200;
 
     //GRAPHICS OBJECTS
     private Thread thread;
@@ -63,8 +63,8 @@ public class Main extends Applet implements Runnable, KeyListener {
         boolean stack=false;
 
         int x=50;
-        int w=10;
-        int sep=4;
+        int w=6;
+        int sep=3;
         int endx=x+((w+sep)*(days.size()+1));
         for (int y=0;y<24;y++){
             int y1=(HEIGHT/24)*y;
@@ -120,7 +120,7 @@ public class Main extends Applet implements Runnable, KeyListener {
             gfx.drawString(prs[i]+" : "+((int)(times[i]*10))/10.0+" Hrs",WIDTH-500,y+(30*i));
         }
         gfx.setFont(gfx.getFont().deriveFont(20f));
-        drawTimePlot(gfx,WIDTH-500,400);
+        drawTimePlot(gfx,WIDTH-500,500);
 
         //FINAL
         g.drawImage(img,0,0,this);
@@ -154,7 +154,7 @@ public class Main extends Applet implements Runnable, KeyListener {
 
     public void importData(){
         ArrayList<ArrayList<String>> records = new ArrayList<>();
-        try (BufferedReader br = new BufferedReader(new FileReader("C:\\Users\\Mike\\Documents\\GitHub\\Time-Tracking\\src\\toggl12.csv"))) {
+        try (BufferedReader br = new BufferedReader(new FileReader("C:\\Users\\Mike\\Documents\\GitHub\\Time-Tracking\\src\\toggl16.csv"))) {
             String line;
             while ((line = br.readLine()) != null) {
                 String[] values = line.split(",");
@@ -286,7 +286,7 @@ public class Main extends Applet implements Runnable, KeyListener {
     public void exportImg(){
         //String export="C:\\Users\\Mike\\Documents\\GitHub\\Time-Tracking\\src\\t.png";
         //String export="C:\\Users\\Mike\\Documents\\GitHub\\Time-Tracking\\src\\tall.png";
-        String export="C:\\Users\\Mike\\Documents\\GitHub\\Time-Tracking\\src\\t10.png";
+        String export="C:\\Users\\Mike\\Documents\\GitHub\\Time-Tracking\\src\\t15.png";
 
         RenderedImage rendImage = toBufferedImage(img);
         File file = new File(export);
