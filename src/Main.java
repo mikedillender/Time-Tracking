@@ -60,7 +60,7 @@ public class Main extends Applet implements Runnable, KeyListener {
 
         //RENDER FOREGROUND
         gfx.setFont(gfx.getFont().deriveFont(20f));
-        boolean stack=false;
+        boolean stack=true;
 
         int x=50;
         int w=6;
@@ -120,7 +120,7 @@ public class Main extends Applet implements Runnable, KeyListener {
             gfx.drawString(prs[i]+" : "+((int)(times[i]*10))/10.0+" Hrs",WIDTH-500,y+(30*i));
         }
         gfx.setFont(gfx.getFont().deriveFont(20f));
-        drawTimePlot(gfx,WIDTH-500,500);
+        //drawTimePlot(gfx,WIDTH-500,500);
 
         //FINAL
         g.drawImage(img,0,0,this);
@@ -233,19 +233,27 @@ public class Main extends Applet implements Runnable, KeyListener {
         }
     }
 
+    public int bound(int i,int max){
+        if(i<0){return 0;}
+        return (i<max)?i:max;
+    }
+
     public void resetcols(){
         int[] relay=new int[projcols.length];
         for (int i=0;i<relay.length;i++){relay[i]=i;}
         relay[3]=8;relay[8]=3;
+        int col=1,rows=1;
+        int[] dhues={0,25,35,50,70,110,150,170,185,200,230,267,280,290,300,320};//distinct hues
+        System.out.println(relay.length+" colors, dhues = "+dhues.length);
         for (int p=0; p<projcols.length; p++){
-            float h=(float) ((relay[p])*(360f/(projcols.length-1)));
+            float h=(float) (dhues[relay[p]%16]);
             //float s=(float)(70+30*((Math.random()<.5)?-1:1)*Math.pow(Math.random(),1.5));;
-            float s=(float)(100-50*(Math.pow(Math.random(),2)));
+            float s=(float)(100-50*(Math.pow(Math.random(),2)))-(relay[p]>=16?(20*(float)Math.random()):0);
             float l=(float)(50+25*((Math.random()<.5)?-.4:1)*Math.pow(Math.random(),1.3));
             System.out.println(h+", "+s+","+l);
-            HSLColor col=new HSLColor(h,s,l,1);
+            HSLColor colr=new HSLColor(h,s,l,1);
             //HSLColor col=new HSLColor(h,100,50,1);
-            projcols[p]=col.getRGB();
+            projcols[p]=colr.getRGB();
         }
         projcols[5]=new Color(26, 30, 48);
     }
@@ -286,7 +294,7 @@ public class Main extends Applet implements Runnable, KeyListener {
     public void exportImg(){
         //String export="C:\\Users\\Mike\\Documents\\GitHub\\Time-Tracking\\src\\t.png";
         //String export="C:\\Users\\Mike\\Documents\\GitHub\\Time-Tracking\\src\\tall.png";
-        String export="C:\\Users\\Mike\\Documents\\GitHub\\Time-Tracking\\src\\t15.png";
+        String export="C:\\Users\\Mike\\Documents\\GitHub\\Time-Tracking\\src\\t14.png";
 
         RenderedImage rendImage = toBufferedImage(img);
         File file = new File(export);
