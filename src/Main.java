@@ -13,7 +13,7 @@ import java.util.ArrayList;
 public class Main extends Applet implements Runnable, KeyListener {
 
     //BASIC VARIABLES
-    private final int WIDTH=2000, HEIGHT=1200;
+    private final int WIDTH=2200, HEIGHT=1200;
 
     //GRAPHICS OBJECTS
     private Thread thread;
@@ -39,6 +39,7 @@ public class Main extends Applet implements Runnable, KeyListener {
     Color[] projcols;
     String[] prs;
     float[] times;
+    boolean stack=false;
 
 
     public void init(){//STARTS THE PROGRAM
@@ -60,7 +61,6 @@ public class Main extends Applet implements Runnable, KeyListener {
 
         //RENDER FOREGROUND
         gfx.setFont(gfx.getFont().deriveFont(20f));
-        boolean stack=true;
 
         int x=50;
         int w=6;
@@ -154,7 +154,7 @@ public class Main extends Applet implements Runnable, KeyListener {
 
     public void importData(){
         ArrayList<ArrayList<String>> records = new ArrayList<>();
-        try (BufferedReader br = new BufferedReader(new FileReader("C:\\Users\\Mike\\Documents\\GitHub\\Time-Tracking\\src\\toggl16.csv"))) {
+        try (BufferedReader br = new BufferedReader(new FileReader("C:\\Users\\Mike\\Documents\\GitHub\\Time-Tracking\\src\\toggl17.csv"))) {
             String line;
             while ((line = br.readLine()) != null) {
                 String[] values = line.split(",");
@@ -286,6 +286,8 @@ public class Main extends Applet implements Runnable, KeyListener {
         }
         if (e.getKeyCode()==KeyEvent.VK_SPACE){
             resetcols();
+        }if (e.getKeyCode()==KeyEvent.VK_S){
+            stack=!stack;
         }
     }
     public void keyReleased(KeyEvent e) {  }
@@ -294,7 +296,7 @@ public class Main extends Applet implements Runnable, KeyListener {
     public void exportImg(){
         //String export="C:\\Users\\Mike\\Documents\\GitHub\\Time-Tracking\\src\\t.png";
         //String export="C:\\Users\\Mike\\Documents\\GitHub\\Time-Tracking\\src\\tall.png";
-        String export="C:\\Users\\Mike\\Documents\\GitHub\\Time-Tracking\\src\\t14.png";
+        String export="C:\\Users\\Mike\\Documents\\GitHub\\Time-Tracking\\src\\t16.png";
 
         RenderedImage rendImage = toBufferedImage(img);
         File file = new File(export);
