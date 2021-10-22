@@ -40,7 +40,7 @@ public class Main extends Applet implements Runnable, KeyListener {
     String[] prs;
     float[] times;
     boolean stack=false;
-
+    boolean drawTPlot=true;
 
     public void init(){//STARTS THE PROGRAM
         this.resize(WIDTH, HEIGHT);
@@ -64,7 +64,7 @@ public class Main extends Applet implements Runnable, KeyListener {
 
         int x=50;
         int w=15;
-        int sep=7;
+        int sep=5;
         int endx=x+((w+sep)*(days.size()+1));
         for (int y=0;y<24;y++){
             int y1=(HEIGHT/24)*y;
@@ -120,7 +120,7 @@ public class Main extends Applet implements Runnable, KeyListener {
             gfx.drawString(prs[i]+" : "+((int)(times[i]*10))/10.0+" Hrs",WIDTH-500,y+(30*i));
         }
         gfx.setFont(gfx.getFont().deriveFont(20f));
-        drawTimePlot(gfx,WIDTH-500,500);
+        if(drawTPlot) drawTimePlot(gfx,WIDTH-500,500);
 
         //FINAL
         g.drawImage(img,0,0,this);
@@ -154,7 +154,7 @@ public class Main extends Applet implements Runnable, KeyListener {
 
     public void importData(){
         ArrayList<ArrayList<String>> records = new ArrayList<>();
-        try (BufferedReader br = new BufferedReader(new FileReader("C:\\Users\\Mike\\Documents\\GitHub\\Time-Tracking\\src\\toggl19.csv"))) {
+        try (BufferedReader br = new BufferedReader(new FileReader("C:\\Users\\Mike\\Documents\\GitHub\\Time-Tracking\\src\\toggl21.csv"))) {
             String line;
             while ((line = br.readLine()) != null) {
                 String[] values = line.split(",");
@@ -300,7 +300,7 @@ public class Main extends Applet implements Runnable, KeyListener {
     public void exportImg(){
         //String export="C:\\Users\\Mike\\Documents\\GitHub\\Time-Tracking\\src\\t.png";
         //String export="C:\\Users\\Mike\\Documents\\GitHub\\Time-Tracking\\src\\tall.png";
-        String export="C:\\Users\\Mike\\Documents\\GitHub\\Time-Tracking\\src\\t19.png";
+        String export="C:\\Users\\Mike\\Documents\\GitHub\\Time-Tracking\\src\\t21.png";
 
         RenderedImage rendImage = toBufferedImage(img);
         File file = new File(export);
