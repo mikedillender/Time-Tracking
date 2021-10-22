@@ -51,7 +51,7 @@ public class Day {
         projs=new float[ps.length];
         for (Task t : tasks) {
             for (int i=0; i<ps.length;i++){
-                if (t.proj.contains(ps[i])){
+                if (t.proj.equalsIgnoreCase(ps[i])){
                     projs[i]+=t.dur;
                 }
             }

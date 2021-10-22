@@ -63,8 +63,8 @@ public class Main extends Applet implements Runnable, KeyListener {
         gfx.setFont(gfx.getFont().deriveFont(20f));
 
         int x=50;
-        int w=6;
-        int sep=3;
+        int w=15;
+        int sep=7;
         int endx=x+((w+sep)*(days.size()+1));
         for (int y=0;y<24;y++){
             int y1=(HEIGHT/24)*y;
@@ -120,7 +120,7 @@ public class Main extends Applet implements Runnable, KeyListener {
             gfx.drawString(prs[i]+" : "+((int)(times[i]*10))/10.0+" Hrs",WIDTH-500,y+(30*i));
         }
         gfx.setFont(gfx.getFont().deriveFont(20f));
-        //drawTimePlot(gfx,WIDTH-500,500);
+        drawTimePlot(gfx,WIDTH-500,500);
 
         //FINAL
         g.drawImage(img,0,0,this);
@@ -154,7 +154,7 @@ public class Main extends Applet implements Runnable, KeyListener {
 
     public void importData(){
         ArrayList<ArrayList<String>> records = new ArrayList<>();
-        try (BufferedReader br = new BufferedReader(new FileReader("C:\\Users\\Mike\\Documents\\GitHub\\Time-Tracking\\src\\toggl17.csv"))) {
+        try (BufferedReader br = new BufferedReader(new FileReader("C:\\Users\\Mike\\Documents\\GitHub\\Time-Tracking\\src\\toggl19.csv"))) {
             String line;
             while ((line = br.readLine()) != null) {
                 String[] values = line.split(",");
@@ -241,21 +241,25 @@ public class Main extends Applet implements Runnable, KeyListener {
     public void resetcols(){
         int[] relay=new int[projcols.length];
         for (int i=0;i<relay.length;i++){relay[i]=i;}
-        relay[3]=8;relay[8]=3;
+        relay[3]=4;relay[4]=3;
+        relay[10]=0;relay[0]=10;
         int col=1,rows=1;
         int[] dhues={0,25,35,50,70,110,150,170,185,200,230,267,280,290,300,320};//distinct hues
         System.out.println(relay.length+" colors, dhues = "+dhues.length);
+        boolean lastDark=Math.random()<.5;
         for (int p=0; p<projcols.length; p++){
-            float h=(float) (dhues[relay[p]%16]);
+            int close=(int)Math.round((p*16f/projcols.length));
+            float h=(float) (dhues[close%16]);
             //float s=(float)(70+30*((Math.random()<.5)?-1:1)*Math.pow(Math.random(),1.5));;
             float s=(float)(100-50*(Math.pow(Math.random(),2)))-(relay[p]>=16?(20*(float)Math.random()):0);
-            float l=(float)(50+25*((Math.random()<.5)?-.4:1)*Math.pow(Math.random(),1.3));
+            float l=(float)(50+35*(((Math.random()<.99)&&!lastDark)?-1:1)*Math.pow(Math.random(),1.3));
+            lastDark=l<50;
             System.out.println(h+", "+s+","+l);
             HSLColor colr=new HSLColor(h,s,l,1);
             //HSLColor col=new HSLColor(h,100,50,1);
-            projcols[p]=colr.getRGB();
+            projcols[relay[p]]=colr.getRGB();
         }
-        projcols[5]=new Color(26, 30, 48);
+        //projcols[5]=new Color(26, 30, 48);
     }
 
     public Color getColor(String p){
@@ -296,7 +300,7 @@ public class Main extends Applet implements Runnable, KeyListener {
     public void exportImg(){
         //String export="C:\\Users\\Mike\\Documents\\GitHub\\Time-Tracking\\src\\t.png";
         //String export="C:\\Users\\Mike\\Documents\\GitHub\\Time-Tracking\\src\\tall.png";
-        String export="C:\\Users\\Mike\\Documents\\GitHub\\Time-Tracking\\src\\t16.png";
+        String export="C:\\Users\\Mike\\Documents\\GitHub\\Time-Tracking\\src\\t19.png";
 
         RenderedImage rendImage = toBufferedImage(img);
         File file = new File(export);
