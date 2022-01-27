@@ -14,6 +14,7 @@ public class Main extends Applet implements Runnable, KeyListener {
 
     //BASIC VARIABLES
     private final int WIDTH=2200, HEIGHT=1200;
+    //private final int WIDTH=1920, HEIGHT=1080;
 
     //GRAPHICS OBJECTS
     private Thread thread;
@@ -40,10 +41,10 @@ public class Main extends Applet implements Runnable, KeyListener {
     String[] prs;
     float[] times;
     boolean stack=false;
-    boolean drawTPlot=true;
+    boolean drawTPlot=false;
 
     public void init(){//STARTS THE PROGRAM
-        this.resize(WIDTH, HEIGHT);
+        //this.resize(WIDTH, HEIGHT);
         this.addKeyListener(this);
         img=createImage(WIDTH,HEIGHT);
         gfx=img.getGraphics();
@@ -63,8 +64,8 @@ public class Main extends Applet implements Runnable, KeyListener {
         gfx.setFont(gfx.getFont().deriveFont(20f));
 
         int x=50;
-        int w=15;
-        int sep=5;
+        int w=30;
+        int sep=20;
         int endx=x+((w+sep)*(days.size()+1));
         for (int y=0;y<24;y++){
             int y1=(HEIGHT/24)*y;
@@ -72,24 +73,14 @@ public class Main extends Applet implements Runnable, KeyListener {
             gfx.drawLine(0,y1,endx,y1);
             gfx.setColor(Color.BLACK);
             if(!stack) {
-                gfx.drawString(y % 12 + "", 10, y1 - 30);
+                gfx.drawString(y % 12 +1 + "", 10, y1 + 60);
             }else {
                 if (y%2==1){continue;}
-                gfx.drawString(12-y/2 + "", 10, y1 - 30);
+                gfx.drawString(12 - y/2 + "", 10, y1 - 20);
             }
         }
         int x1=x;
-        gfx.setFont(gfx.getFont().deriveFont(12f));
-        for (int i=0;i<days.size();i++){
-            x=x+w+sep;
-            if (i%7==0){
-                gfx.setColor(Color.GRAY);
-                gfx.drawLine(x-(sep/2),0,x-(sep/2),HEIGHT);
-                gfx.setColor(Color.BLACK);
-                gfx.drawString(days.get(i).tasksl.get(0).get(7)+"",x,30);
-            }
-        }
-        x=x1;
+
         gfx.setFont(gfx.getFont().deriveFont(20f));
         for (Day d:days){
             //gfx.setColor(dayc[d1%7]);
@@ -110,6 +101,21 @@ public class Main extends Applet implements Runnable, KeyListener {
                     gfx.fillRect(x, (HEIGHT/24)*24-y1-h, w, h);
                     y1=y1+h;
                     i++;
+                }
+            }
+        }
+        x=x1;
+        gfx.setFont(gfx.getFont().deriveFont(12f));
+        int dateMod=(int)Math.round((days.size()/7f)/10f)+1;
+        for (int i=0,week=-1;i<days.size();i++){
+            x=x+w+sep;
+            if (i%7==0){
+                gfx.setColor(Color.GRAY);
+                gfx.drawLine(x-(sep/2),0,x-(sep/2),HEIGHT);
+                week++;
+                if (week%dateMod==0) {
+                    gfx.setColor(Color.BLACK);
+                    gfx.drawString(days.get(i).tasksl.get(0).get(7)+"",x,30);
                 }
             }
         }
@@ -154,7 +160,7 @@ public class Main extends Applet implements Runnable, KeyListener {
 
     public void importData(){
         ArrayList<ArrayList<String>> records = new ArrayList<>();
-        try (BufferedReader br = new BufferedReader(new FileReader("C:\\Users\\Mike\\Documents\\GitHub\\Time-Tracking\\src\\toggl21.csv"))) {
+        try (BufferedReader br = new BufferedReader(new FileReader("C:\\Users\\dille\\Documents\\GitHub\\Time-Tracking\\src\\jan22.csv"))) {
             String line;
             while ((line = br.readLine()) != null) {
                 String[] values = line.split(",");
@@ -290,6 +296,8 @@ public class Main extends Applet implements Runnable, KeyListener {
         }
         if (e.getKeyCode()==KeyEvent.VK_SPACE){
             resetcols();
+        }if (e.getKeyCode()==KeyEvent.VK_T){
+            drawTPlot=!drawTPlot;
         }if (e.getKeyCode()==KeyEvent.VK_S){
             stack=!stack;
         }
@@ -300,7 +308,7 @@ public class Main extends Applet implements Runnable, KeyListener {
     public void exportImg(){
         //String export="C:\\Users\\Mike\\Documents\\GitHub\\Time-Tracking\\src\\t.png";
         //String export="C:\\Users\\Mike\\Documents\\GitHub\\Time-Tracking\\src\\tall.png";
-        String export="C:\\Users\\Mike\\Documents\\GitHub\\Time-Tracking\\src\\t21.png";
+        String export="C:\\Users\\dille\\Documents\\GitHub\\Time-Tracking\\src\\t22.png";
 
         RenderedImage rendImage = toBufferedImage(img);
         File file = new File(export);
