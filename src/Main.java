@@ -13,7 +13,7 @@ import java.util.ArrayList;
 public class Main extends Applet implements Runnable, KeyListener {
 
     //BASIC VARIABLES
-    private final int WIDTH=2200, HEIGHT=1200;
+    private final int WIDTH=2300, HEIGHT=1000;
     //private final int WIDTH=1920, HEIGHT=1080;
 
     //GRAPHICS OBJECTS
@@ -64,8 +64,8 @@ public class Main extends Applet implements Runnable, KeyListener {
         gfx.setFont(gfx.getFont().deriveFont(20f));
 
         int x=50;
-        int w=30;
-        int sep=20;
+        int w=2;
+        int sep=1;
         int endx=x+((w+sep)*(days.size()+1));
         for (int y=0;y<24;y++){
             int y1=(HEIGHT/24)*y;
@@ -82,6 +82,8 @@ public class Main extends Applet implements Runnable, KeyListener {
         int x1=x;
 
         gfx.setFont(gfx.getFont().deriveFont(20f));
+
+        int lasty=-1;
         for (Day d:days){
             //gfx.setColor(dayc[d1%7]);
             x=x+w+sep;
@@ -102,11 +104,23 @@ public class Main extends Applet implements Runnable, KeyListener {
                     y1=y1+h;
                     i++;
                 }
+
+                if (lasty>0) {
+                    gfx.setColor(Color.red);
+                    //int[] xs = new int[]{x - (w + sep), x - (w + sep), x, x};
+                    //int[] ys = new int[]{HEIGHT - lasty - 20, HEIGHT - lasty - 25, HEIGHT - y1 - 25, HEIGHT - y1 - 20};
+                    //gfx.fillPolygon(xs, ys, 4);
+                    for (i=0;i<5;i++){
+                        gfx.drawLine(x - (w + sep),HEIGHT - lasty-2 +i-20 , x, HEIGHT-y1-2+i-20);
+                        gfx.drawLine(x - (w + sep)-2+i,HEIGHT - lasty-20 , x-2+i, HEIGHT-20-y1);
+                    }
+                }
+                lasty=y1;
             }
         }
         x=x1;
         gfx.setFont(gfx.getFont().deriveFont(12f));
-        int dateMod=(int)Math.round((days.size()/7f)/10f)+1;
+        int dateMod=(int)Math.round((days.size()/7f)/20f)+1;
         for (int i=0,week=-1;i<days.size();i++){
             x=x+w+sep;
             if (i%7==0){
@@ -115,15 +129,16 @@ public class Main extends Applet implements Runnable, KeyListener {
                 week++;
                 if (week%dateMod==0) {
                     gfx.setColor(Color.BLACK);
-                    gfx.drawString(days.get(i).tasksl.get(0).get(7)+"",x,30);
+                    if(days.get(i).tasksl.size()!=0)
+                        gfx.drawString(days.get(i).tasksl.get(0).get(7)+"",x,30);
                 }
             }
         }
         int y=50;
-        gfx.setFont(gfx.getFont().deriveFont(18f));
+        gfx.setFont(gfx.getFont().deriveFont(12f));
         for (int i=0;i<projcols.length;i++){
             gfx.setColor(projcols[i]);
-            gfx.drawString(prs[i]+" : "+((int)(times[i]*10))/10.0+" Hrs",WIDTH-500,y+(30*i));
+            gfx.drawString(prs[i]+" : "+((int)(times[i]*10))/10.0+" Hrs",WIDTH-350,y+(20*i));
         }
         gfx.setFont(gfx.getFont().deriveFont(20f));
         if(drawTPlot) drawTimePlot(gfx,WIDTH-500,500);
@@ -154,13 +169,14 @@ public class Main extends Applet implements Runnable, KeyListener {
         g.drawString("Work Done - ^",x-100,y+hei/2);
         gfx.setColor(Color.blue);
         for (Vec2f v: points){
-            g.fillOval(x+(int)(v.x*wid/24f)-4,y+hei-(int)(v.y*hei/12f)-4,8,8);
+            g.fillOval(x+(int)(v.x*wid/24f)-3,y+hei-(int)(v.y*hei/12f)-3,6,6);
         }
     }
 
     public void importData(){
         ArrayList<ArrayList<String>> records = new ArrayList<>();
-        try (BufferedReader br = new BufferedReader(new FileReader("C:\\Users\\dille\\Documents\\GitHub\\Time-Tracking\\src\\jan22.csv"))) {
+        try (BufferedReader br = new BufferedReader(new FileReader("C:\\Users\\dille\\Documents\\GitHub\\Time-Tracking\\src\\toggl_college2.csv"))) {
+        //try (BufferedReader br = new BufferedReader(new FileReader("C:\\Users\\dille\\Documents\\GitHub\\Time-Tracking\\src\\toggl21.csv"))) {
             String line;
             while ((line = br.readLine()) != null) {
                 String[] values = line.split(",");
@@ -225,7 +241,7 @@ public class Main extends Applet implements Runnable, KeyListener {
             //HSLColor col=new HSLColor(h,100,50,1);
             projcols[p]=col.getRGB();
         }
-        resetcols();
+        resetcols(false);
         for (Day d: days) {
             d.setProjs(prs);
         }
@@ -244,11 +260,21 @@ public class Main extends Applet implements Runnable, KeyListener {
         return (i<max)?i:max;
     }
 
-    public void resetcols(){
+    public void resetcols(boolean rr){
         int[] relay=new int[projcols.length];
         for (int i=0;i<relay.length;i++){relay[i]=i;}
-        relay[3]=4;relay[4]=3;
-        relay[10]=0;relay[0]=10;
+        if(rr) {
+            relay[3] = 4;
+            relay[4] = 3;
+            relay[10] = 0;
+            relay[0] = 10;
+        }else {
+            for (int i=0;i<relay.length;i++){
+                int o=(int)(Math.random()*relay.length);
+                int a = relay[i]; relay[i]=relay[o]; relay[o]=a;
+            }
+        }
+
         int col=1,rows=1;
         int[] dhues={0,25,35,50,70,110,150,170,185,200,230,267,280,290,300,320};//distinct hues
         System.out.println(relay.length+" colors, dhues = "+dhues.length);
@@ -258,7 +284,7 @@ public class Main extends Applet implements Runnable, KeyListener {
             float h=(float) (dhues[close%16]);
             //float s=(float)(70+30*((Math.random()<.5)?-1:1)*Math.pow(Math.random(),1.5));;
             float s=(float)(100-50*(Math.pow(Math.random(),2)))-(relay[p]>=16?(20*(float)Math.random()):0);
-            float l=(float)(50+35*(((Math.random()<.99)&&!lastDark)?-1:1)*Math.pow(Math.random(),1.3));
+            float l=(float)(50+35*((!lastDark)?-1:1)*Math.pow(Math.random(),1.3));
             lastDark=l<50;
             System.out.println(h+", "+s+","+l);
             HSLColor colr=new HSLColor(h,s,l,1);
@@ -295,7 +321,9 @@ public class Main extends Applet implements Runnable, KeyListener {
             exportImg();
         }
         if (e.getKeyCode()==KeyEvent.VK_SPACE){
-            resetcols();
+            resetcols(false);
+        }if (e.getKeyCode()==KeyEvent.VK_C){
+            resetcols(true);
         }if (e.getKeyCode()==KeyEvent.VK_T){
             drawTPlot=!drawTPlot;
         }if (e.getKeyCode()==KeyEvent.VK_S){
@@ -308,8 +336,9 @@ public class Main extends Applet implements Runnable, KeyListener {
     public void exportImg(){
         //String export="C:\\Users\\Mike\\Documents\\GitHub\\Time-Tracking\\src\\t.png";
         //String export="C:\\Users\\Mike\\Documents\\GitHub\\Time-Tracking\\src\\tall.png";
-        String export="C:\\Users\\dille\\Documents\\GitHub\\Time-Tracking\\src\\t22.png";
+        String export="C:\\Users\\dille\\Documents\\GitHub\\Time-Tracking\\src\\tcoll4_1.png";
 
+        if(stack){export=export.substring(0,export.length()-4)+"S.png";}
         RenderedImage rendImage = toBufferedImage(img);
         File file = new File(export);
         try {
@@ -317,7 +346,7 @@ public class Main extends Applet implements Runnable, KeyListener {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        System.exit(0);
+        //System.exit(0);
 
     }
 

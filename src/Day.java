@@ -16,6 +16,7 @@ public class Day {
     public void addTask(ArrayList<String> t){
         tasksl.add(t);
         tasks.add(new Task(t));
+        System.out.println(tasks.get(tasks.size()-1).toString());
         if (tasks.get(tasks.size()-1).dur==-1||tasks.get(tasks.size()-1).start==-1){
             tasks.remove(tasks.size()-1);
             tasksl.remove(tasksl.size()-1);
